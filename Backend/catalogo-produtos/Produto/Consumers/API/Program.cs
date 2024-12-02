@@ -1,28 +1,26 @@
+using Application.Commands.Handlers;
+using MediatR;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddControllers();
 // Add services to the container.
+
+builder.Services.AddMediatR(typeof(CriarClienteCommandHandler));
+#region Ioc
+builder.Services.AddScoped<CriarClienteCommandHandler>();
+#endregion
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseRouting();
 
-var summaries = new[]
+app.UseEndpoints(endpoints =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    endpoints.MapControllers();
 });
+
+app.UseHttpsRedirection();
 
 app.Run();
 

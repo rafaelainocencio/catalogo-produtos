@@ -1,4 +1,5 @@
 ﻿using Domain.Cliente.Exception;
+using Domain.Cliente.Ports;
 using Domain.Cliente.ValueObjects;
 using System;
 using System.Collections.Generic;
@@ -37,6 +38,20 @@ namespace Domain.Cliente
             if (!Utils.ValidateEmail(Email))
             {
                 throw new EmailInvalidoException();
+            }
+        }
+
+        public async Task Save(IClienteRepository clienteRepository)
+        {
+            ValidateState();
+
+            if (Id == Guid.Empty)
+            {
+                Id = await clienteRepository.Adicionar(this);
+            }
+            else
+            {
+                await clienteRepository.Atualizar(this);
             }
         }
     }
