@@ -1,4 +1,5 @@
-﻿using Application.Commands;
+﻿using Application;
+using Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -35,8 +36,25 @@ namespace API.Controllers
 
             if (res.Success) return Ok(res);
 
-            return BadRequest(res);
-            //depois implementar o tratamento de erro.
+            if (res.ErrorCode == ErrorCodes.NAO_FOI_POSSIVEL_ARMAZENAR_DADOS)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.CLIENTE_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.DOCUMENTO_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.EMAIL_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+
+            _logger.LogError("Erro ao criar cliente", res);
+            return BadRequest(500);
         }
     }
 }

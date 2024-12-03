@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Domain.Cliente.Exception
 {
-    internal class EmailInvalidoException : System.Exception
+    public class EmailInvalidoException : System.Exception
     {
         public EmailInvalidoException() : base("Email inválido.")
         {
