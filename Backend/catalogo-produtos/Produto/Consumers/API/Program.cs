@@ -1,14 +1,25 @@
 using Application.Commands.Handlers;
+using Data;
+using Data.Clientes;
+using Domain.Cliente.Ports;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-// Add services to the container.
 
 builder.Services.AddMediatR(typeof(CriarClienteCommandHandler));
 #region Ioc
 builder.Services.AddScoped<CriarClienteCommandHandler>();
+
+builder.Services.AddScoped<IClienteRepository, ClienteRepository>();
+#endregion
+
+#region DB writing up
+var connectionString = builder.Configuration.GetConnectionString("Main");
+builder.Services.AddDbContext<AppDbContext>(
+    options => options.UseSqlServer(connectionString));
 #endregion
 
 var app = builder.Build();
@@ -23,8 +34,3 @@ app.UseEndpoints(endpoints =>
 app.UseHttpsRedirection();
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

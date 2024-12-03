@@ -1,10 +1,5 @@
 ﻿using Application.Responses;
 using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Commands
 {
@@ -14,9 +9,9 @@ namespace Application.Commands
         public string Sobrenome { get; private set; }
         public string Email { get; private set; }
         public string DocumentoNumero { get; private set; }
-        public string DocumentoTipo { get; private set; }
+        public int DocumentoTipo { get; private set; }
 
-        public CriarClienteCommand(string nome, string sobrenome, string email, string documentoNumero, string documentoTipo)
+        public CriarClienteCommand(string nome, string sobrenome, string email, string documentoNumero, int documentoTipo)
         {
             Nome = nome;
             Sobrenome = sobrenome;

@@ -12,7 +12,7 @@
             public class TipoDocumentoInputModel
             {
                 public string Numero { get; set; }
-                public string Tipo { get; set; }
+                public int Tipo { get; set; }
             }
         }
     }

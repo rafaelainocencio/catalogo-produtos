@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Application.Responses
+﻿namespace Application.Responses
 {
     public class ClienteResponse : Response
     {
@@ -13,6 +7,6 @@ namespace Application.Responses
         public string Sobrenome { get; set; }
         public string Email { get; set; }
         public string DocumentoNumero { get; set; }
-        public string DocumentoTipo { get; set; }
+        public int DocumentoTipo { get; set; }
     }
 }

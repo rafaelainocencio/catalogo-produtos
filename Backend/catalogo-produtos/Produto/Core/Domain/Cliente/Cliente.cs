@@ -1,17 +1,23 @@
 ﻿using Domain.Cliente.Exception;
 using Domain.Cliente.Ports;
 using Domain.Cliente.ValueObjects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection.Metadata;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Cliente
 {
     public class Cliente
     {
+        public Cliente()
+        {
+        }
+
+        public Cliente(string nome, string sobrenome, string email, Documento documento)
+        {
+            Nome = nome;
+            Sobrenome = sobrenome;
+            Email = email;
+            Documento = documento;
+        }
+
         public Guid Id { get; set; }
         public string Nome { get; set; }
         public string Sobrenome { get; set; }

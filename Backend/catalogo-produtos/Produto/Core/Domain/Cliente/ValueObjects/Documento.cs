@@ -1,15 +1,16 @@
 ﻿using Domain.Cliente.Enums;
 using Domain.Cliente.Exception;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain.Cliente.ValueObjects
 {
     public class Documento
     {
+        public Documento(string numero, TipoDocumento tipo)
+        {
+            Numero = numero;
+            Tipo = tipo;
+        }
+
         public string Numero { get; set; }
         public TipoDocumento Tipo { get; set; }
 
