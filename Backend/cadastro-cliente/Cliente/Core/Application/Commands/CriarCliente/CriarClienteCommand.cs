@@ -1,7 +1,7 @@
 ﻿using Application.Responses;
 using static BuildingBlocks.CQRS.ICommand;
 
-namespace Application.Commands
+namespace Application.Commands.CriarCliente
 {
     public class CriarClienteCommand : ICommand<ClienteResponse>
     {

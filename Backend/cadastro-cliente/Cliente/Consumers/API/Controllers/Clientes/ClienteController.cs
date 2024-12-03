@@ -1,5 +1,6 @@
 ﻿using Application;
-using Application.Commands;
+using Application.Commands.CriarCliente;
+using Application.Queries.GetCliente;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,11 +19,27 @@ namespace API.Controllers.Clientes
             _logger = logger;
             _sender = sender;
         }
-
-        [HttpGet]
-        public async Task<ActionResult> Get()
+        
+        [HttpGet("")]
+        public async Task <IActionResult> Get()
         {
             return Ok();
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById([FromRoute] Guid id)
+        {
+            var res = await _sender.Send(new GetClienteQuery(id));
+
+            if (res.Success) return Ok(res);
+
+            if (res.ErrorCode == ErrorCodes.CLIENTE_NAO_ENCONTRADO)
+            {
+                return NotFound(res);
+            }
+
+            _logger.LogError("Erro ao buscar cliente", res);
+            return BadRequest(500);
         }
 
         [HttpPost]

@@ -7,7 +7,7 @@ using Domain.Cliente.ValueObjects;
 using static Application.Responses.ClienteResponse;
 using static BuildingBlocks.CQRS.ICommandHandler;
 
-namespace Application.Commands.Handlers
+namespace Application.Commands.CriarCliente
 {
     public class CriarClienteCommandHandler : ICommandHandler<CriarClienteCommand, ClienteResponse>
     {
@@ -42,7 +42,7 @@ namespace Application.Commands.Handlers
                         Email = cliente.Email,
                         DocumentoNumero = cliente.Documento.Numero,
                         DocumentoTipo = (int)cliente.Documento.Tipo,
-                        },
+                    },
                     Success = true,
 
                 };

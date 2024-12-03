@@ -1,5 +1,6 @@
 ﻿using Domain.Cliente;
 using Domain.Cliente.Ports;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data.Clientes
 {
@@ -34,9 +35,12 @@ namespace Data.Clientes
             throw new NotImplementedException();
         }
 
-        public Task<Cliente> ObterPorId(Guid id)
+        public async Task<Cliente> ObterPorId(Guid id)
         {
-            throw new NotImplementedException();
+            var cliente =  await _context.Clientes
+                                  .FirstOrDefaultAsync(c => c.Id == id);
+
+            return cliente;
         }
 
         public Task<IEnumerable<Cliente>> ObterTodos()
