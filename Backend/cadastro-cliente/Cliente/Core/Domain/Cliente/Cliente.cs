@@ -69,5 +69,15 @@ namespace Domain.Cliente
             Email = email;
             Documento = documento;
         }
+
+        public void Desativar()
+        {
+            Desativado = true;
+        }
+
+        public void Ativar()
+        {
+            Desativado = false;
+        }
     }
 }

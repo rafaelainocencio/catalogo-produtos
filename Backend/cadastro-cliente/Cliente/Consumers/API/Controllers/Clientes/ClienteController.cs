@@ -1,6 +1,8 @@
 ﻿using Application;
+using Application.Commands.AtivarCliente;
 using Application.Commands.AtualizarCliente;
 using Application.Commands.CriarCliente;
+using Application.Commands.DeletarCliente;
 using Application.Queries.GetCliente;
 using Application.Queries.GetClientes;
 using MediatR;
@@ -138,5 +140,36 @@ namespace API.Controllers.Clientes
             return BadRequest(500);
         }
 
+        [HttpPatch("desativar/{id}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            var res = await _sender.Send(new DeletarClienteCommand(id));
+
+            if (res.Success) return Ok(res);
+
+            if (res.ErrorCode == ErrorCodes.CLIENTE_NAO_ENCONTRADO)
+            {
+                return NotFound(res);
+            }
+
+            _logger.LogError("Erro ao deletar cliente", res);
+            return BadRequest(500);
+        }
+
+        [HttpPatch("ativar/{id}")]
+        public async Task<ActionResult> Patch(Guid id)
+        {
+            var res = await _sender.Send(new AtivarClienteCommand(id));
+
+            if (res.Success) return Ok(res);
+
+            if (res.ErrorCode == ErrorCodes.CLIENTE_NAO_ENCONTRADO)
+            {
+                return NotFound(res);
+            }
+
+            _logger.LogError("Erro ao ativar cliente", res);
+            return BadRequest(500);
+        }
     }
 }
