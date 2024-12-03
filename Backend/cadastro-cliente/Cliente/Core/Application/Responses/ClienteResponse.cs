@@ -2,8 +2,9 @@
 {
     public class ClienteResponse : Response
     {
-        public ResponseData Data { get; set; }
-        
+        public ResponseData? SingleData { get; set; }
+        public List<ResponseData>? MultipleData { get; set; }
+
         public class ResponseData
         {
             public Guid Id { get; set; }

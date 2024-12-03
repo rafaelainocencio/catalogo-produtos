@@ -43,9 +43,11 @@ namespace Data.Clientes
             return cliente;
         }
 
-        public Task<IEnumerable<Cliente>> ObterTodos()
+        public async Task<IEnumerable<Cliente>> ObterTodos(bool desativado)
         {
-            throw new NotImplementedException();
+            var clientes = _context.Clientes;
+
+            return clientes;
         }
 
         public Task Remover(Guid id)

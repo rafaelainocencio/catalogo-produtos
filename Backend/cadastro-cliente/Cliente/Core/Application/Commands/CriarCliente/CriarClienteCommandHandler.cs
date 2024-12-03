@@ -34,7 +34,7 @@ namespace Application.Commands.CriarCliente
 
                 return new ClienteResponse
                 {
-                    Data = new ResponseData
+                    SingleData = new ResponseData
                     {
                         Id = cliente.Id,
                         Nome = cliente.Nome,

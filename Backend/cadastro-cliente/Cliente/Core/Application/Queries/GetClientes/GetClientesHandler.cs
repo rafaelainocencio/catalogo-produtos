@@ -1,37 +1,40 @@
 ﻿using Application.Queries.GetCliente;
 using Application.Responses;
 using Domain.Cliente.Ports;
+using System.Collections.Generic;
 using static Application.Responses.ClienteResponse;
 using static BuildingBlocks.CQRS.IQueryHandler;
 
 namespace Application.Queries.GetClientes
 {
-    public class GetClienteHandler : IQueryHandler<GetClienteQuery, ClienteResponse>
+    public class GetClientesHandler : IQueryHandler<GetClientesQuery, ClienteResponse>
     {
         private readonly IClienteRepository _clienteRepository;
 
-        public GetClienteHandler(IClienteRepository clienteRepository)
+        public GetClientesHandler(IClienteRepository clienteRepository)
         {
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<ClienteResponse> Handle(GetClienteQuery query, CancellationToken cancellationToken)
+        public async Task<ClienteResponse> Handle(GetClientesQuery query, CancellationToken cancellationToken)
         {
-            var cliente = await _clienteRepository.ObterPorId(query.Id);
+            var clientes = await _clienteRepository.ObterTodos(query.Desativado);
 
-            if (cliente == null)
+            if (clientes == null)
             {
                 return new ClienteResponse
                 {
                     ErrorCode = ErrorCodes.CLIENTE_NAO_ENCONTRADO,
-                    Mensage = "Cliente não encontrado",
+                    Mensage = "Nenhum cliente encontrado",
                     Success = false
                 };
             }
 
-            return new ClienteResponse
+            List<ResponseData> responseData = new List<ResponseData>();
+
+            foreach (var cliente in clientes)
             {
-                SingleData = new ResponseData
+                responseData.Add(new ResponseData
                 {
                     Id = cliente.Id,
                     Nome = cliente.Nome,
@@ -39,8 +42,13 @@ namespace Application.Queries.GetClientes
                     Email = cliente.Email,
                     DocumentoNumero = cliente.Documento.Numero,
                     DocumentoTipo = (int)cliente.Documento.Tipo,
-                },
-                Success = true
+                });
+            }
+
+            return new ClienteResponse
+            {
+                MultipleData = responseData,
+                Success = true,
             };
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Application;
 using Application.Commands.CriarCliente;
 using Application.Queries.GetCliente;
+using Application.Queries.GetClientes;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,9 +22,22 @@ namespace API.Controllers.Clientes
         }
         
         [HttpGet("")]
-        public async Task <IActionResult> Get()
+        public async Task <IActionResult> Get([FromQuery] bool desativado)
         {
-            return Ok();
+            var res = await _sender.Send(new GetClientesQuery(desativado));
+
+            if (res.Success)
+            {
+                return Ok(res);
+            }
+
+            if (res.ErrorCode == ErrorCodes.CLIENTE_NAO_ENCONTRADO)
+            {
+                return NotFound(res);
+            }
+
+            _logger.LogError("Erro ao criar cliente", res);
+            return BadRequest(500);
         }
 
         [HttpGet("{id}")]
