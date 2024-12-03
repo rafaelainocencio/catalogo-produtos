@@ -3,19 +3,20 @@ using Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
+namespace API.Controllers.Clientes
 {
     [ApiController]
     [Route("[controller]")]
     public class ClienteController : ControllerBase
     {
         ILogger<ClienteController> _logger;
-        private readonly IMediator _mediator;
+        private readonly ISender _sender;
 
-        public ClienteController(ILogger<ClienteController> logger, IMediator mediator)
+        public ClienteController(ILogger<ClienteController> logger,
+            ISender sender)
         {
             _logger = logger;
-            _mediator = mediator;
+            _sender = sender;
         }
 
         [HttpGet]
@@ -32,7 +33,8 @@ namespace API.Controllers
                                                   cliente.Email,
                                                   cliente.Documento.Numero,
                                                   cliente.Documento.Tipo);
-            var res = await _mediator.Send(command);
+
+            var res = await _sender.Send(command);
 
             if (res.Success) return Ok(res);
 

@@ -1,16 +1,15 @@
-﻿using Application.Commands;
-using Application.Responses;
+﻿using Application.Responses;
 using Domain.Cliente;
 using Domain.Cliente.Enums;
 using Domain.Cliente.Exception;
 using Domain.Cliente.Ports;
 using Domain.Cliente.ValueObjects;
-using MediatR;
 using static Application.Responses.ClienteResponse;
+using static BuildingBlocks.CQRS.ICommandHandler;
 
 namespace Application.Commands.Handlers
 {
-    public class CriarClienteCommandHandler : IRequestHandler<CriarClienteCommand, ClienteResponse>
+    public class CriarClienteCommandHandler : ICommandHandler<CriarClienteCommand, ClienteResponse>
     {
         private readonly IClienteRepository _clienteRepository;
 

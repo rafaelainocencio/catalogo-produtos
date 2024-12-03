@@ -1,9 +1,9 @@
 ﻿using Application.Responses;
-using MediatR;
+using static BuildingBlocks.CQRS.ICommand;
 
 namespace Application.Commands
 {
-    public class CriarClienteCommand : IRequest<ClienteResponse>
+    public class CriarClienteCommand : ICommand<ClienteResponse>
     {
         public string Nome { get; private set; }
         public string Sobrenome { get; private set; }
