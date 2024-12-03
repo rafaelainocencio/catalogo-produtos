@@ -20,14 +20,19 @@ namespace Data.Clientes
             return cliente.Id;
         }
 
-        public Task Atualizar(Cliente cliente)
+        public async Task<Guid> Atualizar(Cliente cliente)
         {
-            throw new NotImplementedException();
+            _context.Clientes.Update(cliente);
+            await _context.SaveChangesAsync();
+            return cliente.Id;
         }
 
-        public Task<Cliente> ObterPorDocumento(string documento)
+        public async Task<Cliente> ObterPorDocumento(string documento)
         {
-            throw new NotImplementedException();
+            var cliente = await _context.Clientes
+                .FirstOrDefaultAsync(c => c.Documento.Numero == documento);
+
+            return cliente;
         }
 
         public Task<Cliente> ObterPorEmail(string email)

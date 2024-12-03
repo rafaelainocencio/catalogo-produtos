@@ -61,5 +61,13 @@ namespace Domain.Cliente
                 await clienteRepository.Atualizar(this);
             }
         }
+
+        public void Update(string nome, string sobrenome, string email, Documento documento)
+        {
+            Nome = nome;
+            Sobrenome = sobrenome;
+            Email = email;
+            Documento = documento;
+        }
     }
 }

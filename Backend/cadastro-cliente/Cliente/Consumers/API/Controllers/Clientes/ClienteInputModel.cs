@@ -15,5 +15,20 @@
                 public int Tipo { get; set; }
             }
         }
+
+        public class AtualizarCliente
+        {
+            public Guid Id { get; set; }
+            public string Nome { get; set; }
+            public string Sobrenome { get; set; }
+            public string Email { get; set; }
+            public TipoDocumentoInputModel Documento { get; set; }
+
+            public class TipoDocumentoInputModel
+            {
+                public string Numero { get; set; }
+                public int Tipo { get; set; }
+            }
+        }
     }
 }

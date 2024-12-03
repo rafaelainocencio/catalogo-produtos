@@ -1,4 +1,5 @@
 ﻿using Application;
+using Application.Commands.AtualizarCliente;
 using Application.Commands.CriarCliente;
 using Application.Queries.GetCliente;
 using Application.Queries.GetClientes;
@@ -85,9 +86,57 @@ namespace API.Controllers.Clientes
             {
                 return BadRequest(res);
             }
+            if (res.ErrorCode == ErrorCodes.CLIENTE_EXISTENTE)
+            {
+                return BadRequest(res);
+            }
 
             _logger.LogError("Erro ao criar cliente", res);
             return BadRequest(500);
         }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult> Update(Guid id, ClienteInputModel.AtualizarCliente cliente)
+        {
+            var command = new AtualizarClienteCommand(id,
+                                                      cliente.Nome,
+                                                      cliente.Sobrenome,
+                                                      cliente.Email,
+                                                      cliente.Documento.Numero,
+                                                      cliente.Documento.Tipo);
+
+            var res = await _sender.Send(command);
+
+            if (res.Success) return Ok(res);
+
+            if (res.ErrorCode == ErrorCodes.CLIENTE_NAO_ENCONTRADO)
+            {
+                return NotFound(res);
+            }
+            if (res.ErrorCode == ErrorCodes.NAO_FOI_POSSIVEL_ARMAZENAR_DADOS)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.CLIENTE_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.DOCUMENTO_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.EMAIL_INVALIDO)
+            {
+                return BadRequest(res);
+            }
+            if (res.ErrorCode == ErrorCodes.CLIENTE_EXISTENTE)
+            {
+                return BadRequest(res);
+            }
+
+            _logger.LogError("Erro ao atualizar cliente", res);
+            return BadRequest(500);
+        }
+
     }
 }

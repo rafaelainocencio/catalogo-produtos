@@ -13,5 +13,6 @@
         DOCUMENTO_INVALIDO = 3,
         EMAIL_INVALIDO = 5,
         CLIENTE_NAO_ENCONTRADO = 6,
+        CLIENTE_EXISTENTE = 7,
     }
 }

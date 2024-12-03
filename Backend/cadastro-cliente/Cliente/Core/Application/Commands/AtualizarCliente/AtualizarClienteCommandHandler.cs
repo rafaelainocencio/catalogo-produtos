@@ -1,5 +1,4 @@
 ﻿using Application.Responses;
-using Domain.Cliente;
 using Domain.Cliente.Enums;
 using Domain.Cliente.Exception;
 using Domain.Cliente.Ports;
@@ -7,25 +6,36 @@ using Domain.Cliente.ValueObjects;
 using static Application.Responses.ClienteResponse;
 using static BuildingBlocks.CQRS.ICommandHandler;
 
-namespace Application.Commands.CriarCliente
+namespace Application.Commands.AtualizarCliente
 {
-    public class CriarClienteCommandHandler : ICommandHandler<CriarClienteCommand, ClienteResponse>
+    public class AtualizarClienteCommandHandler : ICommandHandler<AtualizarClienteCommand, ClienteResponse>
     {
         private readonly IClienteRepository _clienteRepository;
 
-        public CriarClienteCommandHandler(IClienteRepository clienteRepository)
+        public AtualizarClienteCommandHandler(IClienteRepository clienteRepository)
         {
             _clienteRepository = clienteRepository;
         }
 
-        public async Task<ClienteResponse> Handle(CriarClienteCommand request, CancellationToken cancellationToken)
+        public async Task<ClienteResponse> Handle(AtualizarClienteCommand request, CancellationToken cancellationToken)
         {
             try
             {
+                var cliente = await _clienteRepository.ObterPorId(request.Id);
+
+                if (cliente == null || cliente.Desativado)
+                {
+                    return new ClienteResponse
+                    {
+                        ErrorCode = ErrorCodes.CLIENTE_NAO_ENCONTRADO,
+                        Mensage = "Cliente não existe ou está desativado",
+                        Success = false
+                    };
+                }
 
                 var clienteExistente = await _clienteRepository.ObterPorDocumento(request.DocumentoNumero);
 
-                if (clienteExistente != null)
+                if (clienteExistente != null && clienteExistente.Id != request.Id)
                 {
                     return new ClienteResponse
                     {
@@ -35,16 +45,14 @@ namespace Application.Commands.CriarCliente
                     };
                 }
 
-                var cliente = new Cliente(request.Nome,
-                                      request.Sobrenome,
-                                      request.Email,
-                                      new Documento(request.DocumentoNumero,
-                                      (TipoDocumento)request.DocumentoTipo));
 
+                cliente.Update(request.Nome,
+                               request.Sobrenome,
+                               request.Email,
+                               new Documento(request.DocumentoNumero,
+                               (TipoDocumento)request.DocumentoTipo));
 
                 await cliente.Save(_clienteRepository);
-
-
 
                 return new ClienteResponse
                 {
@@ -75,24 +83,6 @@ namespace Application.Commands.CriarCliente
                 return new ClienteResponse
                 {
                     ErrorCode = ErrorCodes.EMAIL_INVALIDO,
-                    Mensage = ex.Message,
-                    Success = false
-                };
-            }
-            catch (DocumentoInvalidoException ex)
-            {
-                return new ClienteResponse
-                {
-                    ErrorCode = ErrorCodes.DOCUMENTO_INVALIDO,
-                    Mensage = ex.Message,
-                    Success = false
-                };
-            }
-            catch (Exception ex)
-            {
-                return new ClienteResponse
-                {
-                    ErrorCode = ErrorCodes.NAO_FOI_POSSIVEL_ARMAZENAR_DADOS,
                     Mensage = ex.Message,
                     Success = false
                 };

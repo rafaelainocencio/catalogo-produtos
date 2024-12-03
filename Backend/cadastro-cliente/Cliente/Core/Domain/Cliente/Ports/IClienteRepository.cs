@@ -13,7 +13,7 @@ namespace Domain.Cliente.Ports
         Task<Cliente> ObterPorDocumento(string documento);
         Task<IEnumerable<Cliente>> ObterTodos(bool? desativado);
         Task<Guid> Adicionar(Cliente cliente);
-        Task Atualizar(Cliente cliente);
+        Task<Guid> Atualizar(Cliente cliente);
         Task Remover(Guid id);
     }
 }
