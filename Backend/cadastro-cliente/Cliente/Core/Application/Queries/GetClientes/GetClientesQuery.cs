@@ -5,10 +5,10 @@ namespace Application.Queries.GetClientes
 {
     public class GetClientesQuery : IQuery<ClienteResponse>
     {
-        public GetClientesQuery(bool desativado) 
+        public GetClientesQuery(bool? desativado) 
         {
             Desativado = desativado;
         }
-        public bool Desativado { get; set; }
+        public bool? Desativado { get; set; }
     }
 }

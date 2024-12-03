@@ -22,6 +22,7 @@ namespace Domain.Cliente
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
         public string Email { get; set; }
+        public bool Desativado { get; set; }
         public Documento Documento { get; set; }
 
         private void ValidateState()

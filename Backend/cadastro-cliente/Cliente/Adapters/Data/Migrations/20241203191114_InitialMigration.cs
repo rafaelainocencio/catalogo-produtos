@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -17,6 +17,7 @@ namespace Data.Migrations
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Sobrenome = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Desativado = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
                     Documento_Numero = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Documento_Tipo = table.Column<int>(type: "int", nullable: false)
                 },

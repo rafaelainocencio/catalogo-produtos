@@ -11,7 +11,7 @@ namespace Domain.Cliente.Ports
         Task<Cliente> ObterPorId(Guid id);
         Task<Cliente> ObterPorEmail(string email);
         Task<Cliente> ObterPorDocumento(string documento);
-        Task<IEnumerable<Cliente>> ObterTodos(bool desativado);
+        Task<IEnumerable<Cliente>> ObterTodos(bool? desativado);
         Task<Guid> Adicionar(Cliente cliente);
         Task Atualizar(Cliente cliente);
         Task Remover(Guid id);

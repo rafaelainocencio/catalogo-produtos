@@ -43,13 +43,20 @@ namespace Data.Clientes
             return cliente;
         }
 
-        public async Task<IEnumerable<Cliente>> ObterTodos(bool desativado)
+        public async Task<IEnumerable<Cliente>> ObterTodos(bool? desativado)
         {
-            var clientes = _context.Clientes;
-
-            return clientes;
+            if(desativado == null)
+            {
+                var clientes = _context.Clientes;
+                return clientes;
+            }
+            else
+            {
+                var clientes = _context.Clientes.Where(c => c.Desativado == desativado); //ver isso aqui pq posso querer todos
+                return clientes;
+            }
         }
-
+         
         public Task Remover(Guid id)
         {
             throw new NotImplementedException();

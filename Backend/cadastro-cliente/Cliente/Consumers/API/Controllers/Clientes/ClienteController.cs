@@ -22,7 +22,7 @@ namespace API.Controllers.Clientes
         }
         
         [HttpGet("")]
-        public async Task <IActionResult> Get([FromQuery] bool desativado)
+        public async Task <IActionResult> Get([FromQuery] bool? desativado)
         {
             var res = await _sender.Send(new GetClientesQuery(desativado));
 
