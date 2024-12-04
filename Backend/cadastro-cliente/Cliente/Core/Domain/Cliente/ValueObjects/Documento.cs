@@ -1,5 +1,6 @@
 ﻿using Domain.Cliente.Enums;
 using Domain.Cliente.Exception;
+using System.Text.RegularExpressions;
 
 namespace Domain.Cliente.ValueObjects
 {
@@ -32,11 +33,20 @@ namespace Domain.Cliente.ValueObjects
             {
                 throw new DocumentoInvalidoException("RG deve conter 9 dígitos.");
             }
+            if (Tipo == TipoDocumento.RG && ContainsLetterOrSpecialCharacter(Numero))
+            {
+                throw new DocumentoInvalidoException("RG não pode conter letras ou caracteres especiais.");
+            }
             if (Tipo == TipoDocumento.CPF && !IsCpf(Numero))
             {
                 throw new DocumentoInvalidoException("CPF não é válido.");
             };
 
+        }
+
+        public bool ContainsLetterOrSpecialCharacter(string str)
+        {
+            return Regex.IsMatch(str, @"[a-zA-Z]") || Regex.IsMatch(str, @"[^a-zA-Z0-9\s]");
         }
 
         public static bool IsCpf(string cpf)

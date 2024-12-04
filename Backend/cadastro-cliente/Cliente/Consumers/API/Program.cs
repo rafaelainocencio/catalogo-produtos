@@ -35,7 +35,21 @@ builder.Services.AddSwaggerGen(c =>
 
 #endregion
 
+#region habilitar cors
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+#endregion
+
 var app = builder.Build();
+
+app.UseCors("AllowAll");
 
 // Habilita o Swagger no ambiente de desenvolvimento
 if (app.Environment.IsDevelopment())

@@ -62,6 +62,7 @@ namespace Application.Commands.AtualizarCliente
                         Nome = cliente.Nome,
                         Sobrenome = cliente.Sobrenome,
                         Email = cliente.Email,
+                        Desativado = cliente.Desativado,
                         DocumentoNumero = cliente.Documento.Numero,
                         DocumentoTipo = (int)cliente.Documento.Tipo,
                     },
@@ -87,6 +88,24 @@ namespace Application.Commands.AtualizarCliente
                     Success = false
                 };
             }
+            catch (DocumentoInvalidoException ex)
+            {
+                return new ClienteResponse
+                {
+                    ErrorCode = ErrorCodes.DOCUMENTO_INVALIDO,
+                    Mensage = ex.Message,
+                    Success = false
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ClienteResponse
+                {
+                    ErrorCode = ErrorCodes.NAO_FOI_POSSIVEL_ARMAZENAR_DADOS,
+                    Mensage = ex.Message,
+                    Success = false
+                };
+            }   
         }
     }
 }
