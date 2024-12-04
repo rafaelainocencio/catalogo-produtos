@@ -11,6 +11,7 @@ const App = () => {
   });
   const [editing, setEditing] = useState(null);
   const [filter, setFilter] = useState(1); // 1: Ativos, 2: Desativados, 3: Todos
+  const [documentoTipo, setDocumentoTipo] = useState(1); // 1: RG, 2: CPF
 
   const apiUrl = "http://localhost:5198/cliente";
 
@@ -55,7 +56,7 @@ const App = () => {
       email: form.email,
       documento: {
         numero: form.documentoNumero,
-        tipo: form.documentoTipo,
+        tipo: documentoTipo,
       },
     };
 
@@ -95,6 +96,7 @@ const App = () => {
 
   const handleEdit = (item) => {
     setForm(item);
+    setDocumentoTipo(item.documentoTipo);
     setEditing(item);
   };
 
@@ -138,13 +140,23 @@ const App = () => {
           onChange={(e) => setForm({ ...form, documentoNumero: e.target.value })}
           required
         />
-        <input
-          type="number"
-          placeholder="Tipo de Documento"
-          value={form.documentoTipo}
-          onChange={(e) => setForm({ ...form, documentoTipo: Number(e.target.value) })}
-          required
-        />
+        <div>
+          <label>Tipo do Documento: </label>
+          <button 
+            type="button" 
+            onClick={() => setDocumentoTipo(1)} 
+            style={{ backgroundColor: documentoTipo === 1 ? 'lightgreen' : 'lightgray' }}
+          >
+            RG
+          </button>
+          <button 
+            type="button" 
+            onClick={() => setDocumentoTipo(2)} 
+            style={{ backgroundColor: documentoTipo === 2 ? 'lightgreen' : 'lightgray' }}
+          >
+            CPF
+          </button>
+        </div>
         <button type="submit">{editing ? "Atualizar" : "Adicionar"}</button>
       </form>
 
