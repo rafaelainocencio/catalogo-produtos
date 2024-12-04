@@ -40,6 +40,7 @@ namespace Application.Queries.GetClientes
                     Nome = cliente.Nome,
                     Sobrenome = cliente.Sobrenome,
                     Email = cliente.Email,
+                    Desativado = cliente.Desativado,
                     DocumentoNumero = cliente.Documento.Numero,
                     DocumentoTipo = (int)cliente.Documento.Tipo,
                 });
