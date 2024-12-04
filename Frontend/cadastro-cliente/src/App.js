@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -101,7 +104,7 @@ const App = () => {
   };
 
   return (
-    <div>
+    <div class="container">
       <h1>CRUD com React</h1>
       <div>
         <label>Filtrar clientes:</label>
@@ -160,17 +163,42 @@ const App = () => {
         <button type="submit">{editing ? "Atualizar" : "Adicionar"}</button>
       </form>
 
-      <ul>
-        {items.map((item) => (
-          <li key={item.id}>
-            <strong>{item.nome}:</strong> {item.email}
-            <button onClick={() => handleEdit(item)}>Edit</button>
-            <button onClick={() => handleAtivarOuDesativar(item.id, item.desativado)}>
-              {item.desativado ? "Ativar" : "Desativar"}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <table className=" container table table-striped table-bordered">
+        <thead>
+          <tr>
+            <th>Nome Completo</th>
+            <th>Documento</th>
+            <th>Email</th>
+          </tr>
+        </thead>
+        <tbody>
+  {items.map((item) => (
+    <tr key={item.Id}>
+      <td>{item.nome} {item.sobrenome}</td>
+      <td>{item.documentoNumero}</td>
+      <td>{item.email}</td>
+      <td>
+        <button 
+          onClick={() => handleEdit(item)} 
+          className="btn btn-warning"
+        >
+          <i className="bi bi-pencil-fill"></i>
+        </button>
+      </td>
+      <td>
+        <button 
+          onClick={() => handleAtivarOuDesativar(item.id, item.desativado)} 
+          className={`btn ${item.desativado ? 'btn-success' : 'btn-danger'} w-100`}
+        >
+          <i className={`bi ${item.desativado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`}></i> 
+          {item.desativado ? " Ativar" : " Desativar"}
+        </button>
+      </td>
+    </tr>
+  ))}
+</tbody>
+
+      </table>
     </div>
   );
 };
