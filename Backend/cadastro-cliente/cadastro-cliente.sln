@@ -25,7 +25,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Cliente\Core
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Cliente\Core\Domain\Domain.csproj", "{7E1A4E46-AC80-4FEA-9BEE-FB56E514CBDC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks.csproj", "{D7A148DC-F3BA-4DB2-8941-BF4C006E4207}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlocks", "BuildingBlocks\BuildingBlocks.csproj", "{D7A148DC-F3BA-4DB2-8941-BF4C006E4207}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

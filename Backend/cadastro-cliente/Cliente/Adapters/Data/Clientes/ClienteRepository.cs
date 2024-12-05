@@ -35,11 +35,6 @@ namespace Data.Clientes
             return cliente;
         }
 
-        public Task<Cliente> ObterPorEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Cliente> ObterPorId(Guid id)
         {
             var cliente =  await _context.Clientes
@@ -57,14 +52,9 @@ namespace Data.Clientes
             }
             else
             {
-                var clientes = _context.Clientes.Where(c => c.Desativado == desativado); //ver isso aqui pq posso querer todos
+                var clientes = _context.Clientes.Where(c => c.Desativado == desativado);
                 return clientes;
             }
-        }
-         
-        public Task Remover(Guid id)
-        {
-            throw new NotImplementedException();
         }
     }
 }
