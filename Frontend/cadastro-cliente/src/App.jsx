@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import EditModal from "./components/EditModal.jsx";
 
 
 const App = () => {
@@ -104,7 +105,7 @@ const App = () => {
   };
 
   return (
-    <div class="container">
+    <div className="container">
       <h1>CRUD com React</h1>
       <div>
         <label>Filtrar clientes:</label>
@@ -166,39 +167,41 @@ const App = () => {
       <table className=" container table table-striped table-bordered">
         <thead>
           <tr>
+            {/* <th>Id</th> */}
             <th>Nome Completo</th>
             <th>Documento</th>
             <th>Email</th>
           </tr>
         </thead>
-        <tbody>
-  {items.map((item) => (
-    <tr key={item.Id}>
-      <td>{item.nome} {item.sobrenome}</td>
-      <td>{item.documentoNumero}</td>
-      <td>{item.email}</td>
-      <td>
-        <button 
-          onClick={() => handleEdit(item)} 
-          className="btn btn-warning"
-        >
-          <i className="bi bi-pencil-fill"></i>
-        </button>
-      </td>
-      <td>
-        <button 
-          onClick={() => handleAtivarOuDesativar(item.id, item.desativado)} 
-          className={`btn ${item.desativado ? 'btn-success' : 'btn-danger'} w-100`}
-        >
-          <i className={`bi ${item.desativado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`}></i> 
-          {item.desativado ? " Ativar" : " Desativar"}
-        </button>
-      </td>
-    </tr>
-  ))}
-</tbody>
-
+          <tbody>
+          {items.map((item, index) => (
+            <tr key={item.Id || index}>
+              {/* <td>{item.id}</td> */}
+              <td>{item.nome} {item.sobrenome}</td>
+              <td>{item.documentoNumero}</td>
+              <td>{item.email}</td>
+              <td>
+                <button 
+                  onClick={() => handleEdit(item)} 
+                  className="btn btn-warning"
+                >
+                  <i className="bi bi-pencil-fill"></i>
+                </button>
+              </td>
+              <td>
+                <button 
+                  onClick={() => handleAtivarOuDesativar(item.id, item.desativado)} 
+                  className={`btn ${item.desativado ? 'btn-success' : 'btn-danger'} w-100`}
+                >
+                  <i className={`bi ${item.desativado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`}></i> 
+                  {item.desativado ? " Ativar" : " Desativar"}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
       </table>
+      <EditModal />
     </div>
   );
 };
