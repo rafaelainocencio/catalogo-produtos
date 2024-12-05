@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import EditModal from "./components/EditModal.jsx";
-
+import TesteModal from "./components/Modal";
+import Popup from "./components/Popup";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -11,13 +11,16 @@ const App = () => {
     sobrenome: "",
     email: "",
     documentoNumero: "",
-    documentoTipo: "",
+    documentoTipo: 1, // RG por padrão
   });
-  const [editing, setEditing] = useState(null);
-  const [filter, setFilter] = useState(1); // 1: Ativos, 2: Desativados, 3: Todos
-  const [documentoTipo, setDocumentoTipo] = useState(1); // 1: RG, 2: CPF
 
+  const [showModal, setShowModal] = useState(false);
+  const [filter, setFilter] = useState(1); // 1: Ativos, 2: Desativados, 3: Todos
   const apiUrl = "http://localhost:5198/cliente";
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [popupMessage, setPopupMessage] = useState("");
+
 
   useEffect(() => {
     buscarClientes();
@@ -39,7 +42,6 @@ const App = () => {
     fetch(`${apiUrl}${filtroClientes}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log("Dados recebidos:", data);
         setItems(data.multipleData || []);
       })
       .catch((error) => console.error("Error fetching items:", error));
@@ -48,24 +50,20 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    let id = "";
-    if (editing) {
-      id = editing.id.toUpperCase();
-    }
-
+    const isEditing = !!form.id;
     const formattedData = {
-      Id: id,
+      Id: form.id || "",
       nome: form.nome,
       sobrenome: form.sobrenome,
       email: form.email,
       documento: {
         numero: form.documentoNumero,
-        tipo: documentoTipo,
+        tipo: form.documentoTipo,
       },
     };
 
-    const method = editing ? "PUT" : "POST";
-    const url = editing ? `${apiUrl}/${editing.id}` : apiUrl;
+    const method = isEditing ? "PUT" : "POST";
+    const url = isEditing ? `${apiUrl}/${form.id}` : apiUrl;
 
     fetch(url, {
       method,
@@ -76,19 +74,31 @@ const App = () => {
       .then((data) => {
         if (data.success) {
           buscarClientes();
+          setPopupMessage(
+            `Cliente ${isEditing ? "atualizado" : "cadastrado"} com sucesso!`
+          );
+          setShowPopup(true);
+          setShowModal(false);
+
           setForm({
+            id: "",
             nome: "",
             sobrenome: "",
             email: "",
             documentoNumero: "",
-            documentoTipo: "",
+            documentoTipo: 1,
           });
-          setEditing(null);
+
         } else {
-          alert(`Erro: ${data.mensage}`);
+          setPopupMessage(`Erro: ${data.mensage}`);
+          setShowPopup(true);
         }
       })
-      .catch((error) => console.error("Error saving item:", error));
+      .catch((error) => {
+        console.error("Error saving item:", error);
+        setPopupMessage("Erro ao salvar o cliente.");
+        setShowPopup(true);
+      });
   };
 
   const handleAtivarOuDesativar = (id, isDesativado) => {
@@ -98,100 +108,80 @@ const App = () => {
       .catch((error) => console.error("Erro ao atualizar cliente:", error));
   };
 
-  const handleEdit = (item) => {
-    setForm(item);
-    setDocumentoTipo(item.documentoTipo);
-    setEditing(item);
+  const toggleModal = () => {
+    setShowModal(!showModal);
+    setForm({
+      nome: "",
+      sobrenome: "",
+      email: "",
+      documentoNumero: "",
+      documentoTipo: 1, // RG por padrão
+    });
   };
 
   return (
-    <div className="container">
-      <h1>CRUD com React</h1>
-      <div>
-        <label>Filtrar clientes:</label>
-        <select value={filter} onChange={(e) => setFilter(Number(e.target.value))}>
-          <option value={1}>Ativos</option>
-          <option value={2}>Desativados</option>
-          <option value={3}>Todos</option>
-        </select>
-      </div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Nome"
-          value={form.nome}
-          onChange={(e) => setForm({ ...form, nome: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Sobrenome"
-          value={form.sobrenome}
-          onChange={(e) => setForm({ ...form, sobrenome: e.target.value })}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
-          required
-        />
-        <input
-          type="text"
-          placeholder="Número do Documento"
-          value={form.documentoNumero}
-          onChange={(e) => setForm({ ...form, documentoNumero: e.target.value })}
-          required
-        />
-        <div>
-          <label>Tipo do Documento: </label>
-          <button 
-            type="button" 
-            onClick={() => setDocumentoTipo(1)} 
-            style={{ backgroundColor: documentoTipo === 1 ? 'lightgreen' : 'lightgray' }}
-          >
-            RG
-          </button>
-          <button 
-            type="button" 
-            onClick={() => setDocumentoTipo(2)} 
-            style={{ backgroundColor: documentoTipo === 2 ? 'lightgreen' : 'lightgray' }}
-          >
-            CPF
-          </button>
-        </div>
-        <button type="submit">{editing ? "Atualizar" : "Adicionar"}</button>
-      </form>
+    <div className="container mt-5">
 
-      <table className=" container table table-striped table-bordered">
+      <TesteModal
+        show={showModal}
+        onClose={toggleModal}
+        form={form}
+        setForm={setForm}
+        handleSubmit={handleSubmit}
+      />
+
+      <Popup 
+        show={showPopup}
+        message={popupMessage}
+        type="success" 
+        onClose={() => setShowPopup(false)} 
+      />
+
+
+      <h1 className="text-center">Clientes</h1>
+      <div className="d-flex justify-content-between align-items-center mb-3">
+      <div className="filter-section mb-3">
+      <label htmlFor="clientFilter" className="me-3 fs-4">Filtrar clientes:</label>
+      <select id="clientFilter" value={filter} onChange={(e) => setFilter(Number(e.target.value))} className="form-select">
+        <option value={1}>Ativos</option>
+        <option value={2}>Desativados</option>
+        <option value={3}>Todos</option>
+      </select>
+    </div>
+      <div className="add-client-section">
+        <button type="button" onClick={() => setShowModal(true)} className="btn btn-primary">
+        <i className="bi bi-plus-circle-fill"></i> Adicionar Cliente
+        </button>
+      </div>
+    </div>
+
+      <table className="container table table-striped table-bordered mt-3">
         <thead>
           <tr>
-            {/* <th>Id</th> */}
             <th>Nome Completo</th>
             <th>Documento</th>
             <th>Email</th>
+            <th>Ações</th>
           </tr>
         </thead>
-          <tbody>
+        <tbody>
           {items.map((item, index) => (
             <tr key={item.Id || index}>
-              {/* <td>{item.id}</td> */}
               <td>{item.nome} {item.sobrenome}</td>
               <td>{item.documentoNumero}</td>
               <td>{item.email}</td>
-              <td>
+              <td className="d-flex">
                 <button 
-                  onClick={() => handleEdit(item)} 
-                  className="btn btn-warning"
-                >
+                  onClick={() => {
+                    setShowModal(true);
+                    setForm(item);
+                  }} 
+                  className="btn btn-warning m-1">
                   <i className="bi bi-pencil-fill"></i>
                 </button>
-              </td>
-              <td>
                 <button 
                   onClick={() => handleAtivarOuDesativar(item.id, item.desativado)} 
-                  className={`btn ${item.desativado ? 'btn-success' : 'btn-danger'} w-100`}
+                  className={`btn ${item.desativado ? 'btn-success' : 'btn-danger'} w-100 m-1`}
                 >
                   <i className={`bi ${item.desativado ? 'bi-check-circle-fill' : 'bi-x-circle-fill'}`}></i> 
                   {item.desativado ? " Ativar" : " Desativar"}
@@ -201,7 +191,6 @@ const App = () => {
           ))}
         </tbody>
       </table>
-      <EditModal />
     </div>
   );
 };
