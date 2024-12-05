@@ -3,6 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import TesteModal from "./components/Modal";
 import Popup from "./components/Popup";
+import axios from "axios";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -39,13 +40,12 @@ const App = () => {
         filtroClientes = "";
     }
 
-    fetch(`${apiUrl}${filtroClientes}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setItems(data.multipleData || []);
-      })
-      .catch((error) => console.error("Error fetching items:", error));
-  };
+    axios.get(`${apiUrl}${filtroClientes}`)
+    .then((response) => {
+      setItems(response.data.multipleData || []);
+    })
+    .catch((error) => console.error("Error fetching items:", error));
+    };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -62,50 +62,80 @@ const App = () => {
       },
     };
 
-    const method = isEditing ? "PUT" : "POST";
     const url = isEditing ? `${apiUrl}/${form.id}` : apiUrl;
 
-    fetch(url, {
-      method,
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formattedData),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.success) {
-          buscarClientes();
-          setPopupMessage(
-            `Cliente ${isEditing ? "atualizado" : "cadastrado"} com sucesso!`
-          );
-          setShowPopup(true);
-          setShowModal(false);
 
-          setForm({
-            id: "",
-            nome: "",
-            sobrenome: "",
-            email: "",
-            documentoNumero: "",
-            documentoTipo: 1,
+    if (isEditing) {
+      axios.put(url, formattedData)
+      .then((response) => {
+        console.log("data: ", response.data);
+            if (response.data.success) {
+              buscarClientes();
+              setPopupMessage(
+                `Cliente ${isEditing ? "atualizado" : "cadastrado"} com sucesso!`
+              );
+              setShowPopup(true);
+              setShowModal(false);
+    
+              setForm({
+                id: "",
+                nome: "",
+                sobrenome: "",
+                email: "",
+                documentoNumero: "",
+                documentoTipo: 1,
+              });
+    
+            } else {
+              setPopupMessage(`Erro: ${response.data.mensage}`);
+              setShowPopup(true);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving item:", error);
+            setPopupMessage(`Erro: ${error.response.data.mensage}`);
+            setShowPopup(true);
           });
-
-        } else {
-          setPopupMessage(`Erro: ${data.mensage}`);
-          setShowPopup(true);
-        }
-      })
-      .catch((error) => {
-        console.error("Error saving item:", error);
-        setPopupMessage("Erro ao salvar o cliente.");
-        setShowPopup(true);
-      });
+    } else {
+      axios.post(url, formattedData)
+      .then((response) => {
+            if (response.data.success) {
+              buscarClientes();
+              setPopupMessage(
+                `Cliente ${isEditing ? "atualizado" : "cadastrado"} com sucesso!`
+              );
+              setShowPopup(true);
+              setShowModal(false);
+    
+              setForm({
+                id: "",
+                nome: "",
+                sobrenome: "",
+                email: "",
+                documentoNumero: "",
+                documentoTipo: 1,
+              });
+    
+            } else {
+              setPopupMessage(`Erro: ${response.data.mensage}`);
+              setShowPopup(true);
+            }
+          })
+          .catch((error) => {
+            console.error("Error saving item:", error);
+            setPopupMessage(`Erro: ${error.response.data.mensage}`);
+            setShowPopup(true);
+          });
+    };
   };
 
   const handleAtivarOuDesativar = (id, isDesativado) => {
     const action = isDesativado ? "ativar" : "desativar";
-    fetch(`${apiUrl}/${action}/${id}`, { method: "PATCH" })
-      .then(() => buscarClientes())
-      .catch((error) => console.error("Erro ao atualizar cliente:", error));
+
+    axios
+    .patch(`${apiUrl}/${action}/${id}`)
+    .then(() => buscarClientes())
+    .catch((error) => console.error("Erro ao atualizar cliente:", error.response.data.mensage));
   };
 
   const toggleModal = () => {
