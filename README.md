@@ -1,6 +1,6 @@
 # Cadastro de Clientes
 
-Este projeto é um sistema de cadastro de clientes que permite gerenciar informações. Foi desenvolvido com **.NET**, **React** e **SQL Server**, seguindo padrões como **DDD**, **SOLID** e **CQRS**.
+Este projeto é um sistema de cadastro de clientes que permite gerenciar informações. Foi desenvolvido com **.NET**, **React** e **SQL Server**, seguindo padrões como **Hexagonal Architecture** **DDD**, **SOLID** e **CQRS**.
 
 ## Funcionalidades
 
@@ -16,6 +16,7 @@ Este projeto é um sistema de cadastro de clientes que permite gerenciar informa
 - **SQL Server**
 - **CQRS**, **Mediator**
 - **DDD**, princípios **SOLID**
+- **Hexagonal architecture**
 
 ### Frontend:
 - **React**
